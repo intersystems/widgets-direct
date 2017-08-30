@@ -1,0 +1,50 @@
+<html ng-app="WidgetsDirect">
+<head>
+
+<!-- Put your page Title here -->
+<title>	Widgets Direct </title>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+</head>
+
+<body ng-controller="PageController">
+
+		<!-- Put your page code here -->
+		<md-toolbar class="md-accent">
+		 <h2 class="md-toolbar-tools">
+		 	<span>{{message}}</span>
+		 </h2>
+		</md-toolbar>
+		
+		
+		<md-card ng-repeat="widget in widgets">
+         <md-card-header>
+          <md-card-avatar>
+            <img src="img/logo.svg"/>
+          </md-card-avatar>
+          <md-card-header-text>
+            <span class="md-title">Widgets Direct</span>
+            <span class="md-subhead">{{widget.Id}} - {{widget.Name}}</span>
+          </md-card-header-text>
+        </md-card-header>
+        <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
+        
+        <md-card-content>
+          <p>
+            This should be a description of {{widget.Name}}
+          </p>
+        </md-card-content>
+      </md-card>
+		
+		<hr>
+<!-- AngularJS Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+<!--AngularMaterial Library -->
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<!--User Libraries -->
+<script src="widgetmaster.js"></script>		
+</body>
+ 
+</html>
