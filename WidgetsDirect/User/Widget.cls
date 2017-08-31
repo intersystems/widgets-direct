@@ -36,6 +36,21 @@ Method toJSON(traverseRelationships As %Boolean = 0) As %String
 	quit jsonReturn
 }
 
+Method fromJSON(json As %String) As %String
+{
+	
+	set jsonObj = {}.%FromJSON(json)
+	 
+    set propsIterator = jsonObj.%GetIterator()
+    While (propsIterator.%GetNext(.key,.value)) {
+          if ((key="Name")||(key="Description")||(key="Price")||(key="Quantity")){
+	             Set $PROPERTY($this, key) = value
+	          }
+         }
+         
+	quit ..%Save()
+}
+
 Storage Default
 {
 <Data name="WidgetDefaultData">
