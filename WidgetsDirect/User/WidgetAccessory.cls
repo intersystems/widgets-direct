@@ -20,7 +20,7 @@ Property SKU As %String;
 
 Relationship Widgets As User.WidgetAccessoryLink [ Cardinality = many, Inverse = Accessory ];
 
-Method toJSON() As %String
+Method toJSON(traverseRelationships As %Boolean = 0) As %String
 {
 	
 	set jsonReturn = {}
@@ -33,6 +33,17 @@ Method toJSON() As %String
 	set jsonReturn.InProduction		 = ..InProduction
 	set jsonReturn.Import			 = ..Import
 	set jsonReturn.SKU				 = ..SKU
+	
+	if traverseRelationships {
+	set widgetkey = ""
+    set widgetList = []
+      Do {
+          set widgetLink = ..Widgets.GetNext(.widgetkey)
+          If (widgetLink '= "") { do widgetList.%Push(widgetLink.Widget.toJSON()) }
+      } While (widgetkey '= "")
+      set jsonReturn.Widgets = widgetList
+	}
+	
 	quit jsonReturn
 }
 

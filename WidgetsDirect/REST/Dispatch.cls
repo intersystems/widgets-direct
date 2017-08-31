@@ -31,7 +31,7 @@ ClassMethod HelloWorld(Name As %String) As %Status
     For { &SQL(FETCH WidgetCurs)
     	  Quit:SQLCODE
     	  set widgetObj = ##class(User.Widget).%OpenId(Id)
-    	  do widgetAry.%Push(widgetObj.toJSON())
+    	  do widgetAry.%Push(widgetObj.toJSON(1))
 	    }
     &SQL(CLOSE WidgetCurs)
 	SET retObj.Widgets = widgetAry
