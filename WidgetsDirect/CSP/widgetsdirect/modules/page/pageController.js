@@ -1,5 +1,5 @@
 angular
-  .module('WidgetsDirect', ['ngMaterial'])
+  .module('WidgetsDirect')
    .controller('PageController', ['$q', '$scope', '$timeout', '$http', '$log', function($q, $scope, $timeout, $http, $log) {
 	
 	$scope.message = "";

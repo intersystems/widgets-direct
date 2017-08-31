@@ -26,7 +26,7 @@
         <md-button class="md-raised md-primary" ng-click="sortAsc=!sortAsc" flex>Reorder</md-button>
         </div>
         <!-- List of Widgets starts here -->    
-		<md-card ng-repeat="widget in widgets | filter : widgetFilterText |  orderBy: !sortAsc ? 'Id' : '-Id'">
+		<md-card ng-repeat="widget in widgets | filter : widgetFilterText |  orderBy: !sortAsc ? 'Id' : '-Id'" ng-controller="WidgetController">
          <md-card-header>
           <md-card-avatar>
            <img src="img/logo.svg"/>
@@ -37,7 +37,7 @@
             <span class="md-subhead">There are {{widget.Accessories.length}} compatible accessories </span>
           </md-card-header-text>
          </md-card-header>
-         <md-card-content>
+         <md-card-content ng-click="editWidget($event,widget)">
           <p>
             {{widget.Description}}
           </p>
@@ -54,7 +54,8 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 <!--User Libraries -->
 <script src="widgetmaster.js"></script>		
-<script src="modules/page/pageController.js"></script>		
+<script src="modules/page/pageController.js"></script>
+<script src="modules/widget/WidgetController.js"></script>		
 </body>
  
 </html>

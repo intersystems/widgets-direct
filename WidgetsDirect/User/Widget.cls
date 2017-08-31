@@ -10,6 +10,8 @@ Property Price As %Currency;
 
 Property Quantity As %Integer;
 
+Property Deleted as %Boolean;
+
 Relationship Accessories As User.WidgetAccessoryLink [ Cardinality = many, Inverse = Widget ];
 
 Method toJSON(traverseRelationships As %Boolean = 0) As %String
@@ -68,6 +70,9 @@ Storage Default
 </Value>
 <Value name="5">
 <Value>Quantity</Value>
+</Value>
+<Value name="6">
+<Value>Deleted</Value>
 </Value>
 </Data>
 <DataLocation>^User.WidgetD</DataLocation>

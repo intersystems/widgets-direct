@@ -23,7 +23,8 @@ ClassMethod GetAllWidgets() As %Status
     					    	   SELECT 
 								   %Id
 								   INTO :Id
-								   FROM SQLUser.Widget			
+								   FROM SQLUser.Widget	
+								   where Deleted <> 1 or Deleted is null		
  					)	 
 			
     &SQL(OPEN WidgetCurs)
@@ -102,6 +103,29 @@ ClassMethod UpdateWidgetById(widgetid As %Integer) As %Status
     
     Set tSC = widgetObj.fromJSON(updateJSON)
    
+        
+    If $$$ISERR(tSC) { Quit tSC }
+	
+	WRITE widgetObj.toJSON().%ToJSON()
+	QUIT $$$OK
+}
+
+ClassMethod DeleteWidgetById(widgetid As %Integer) As %Status
+{
+	Set %response.ContentType="application/json"
+	
+	SET retObj = {}
+	
+	Kill %objlasterror
+    set widgetObj = ##class(User.Widget).%OpenId(widgetid)
+    If '$IsObject(widgetObj) {
+    	// Object with this ID does not exist
+        If $Data(%objlasterror) { Set tSC=%objlasterror }
+        }
+   
+    
+    set widgetObj.Deleted=1
+   	set tSC = widgetObj.%Save()
         
     If $$$ISERR(tSC) { Quit tSC }
 	
