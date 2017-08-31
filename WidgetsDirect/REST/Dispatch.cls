@@ -18,14 +18,26 @@ ClassMethod HelloWorld(Name As %String) As %Status
 	SET retObj.Message = retMessage
 	//
 	SET widgetAry = []
-	FOR i=1:1:10 {
-		SET widgetObj = {}
-		SET widgetObj.Id = i
-		SET widgetObj.Name = "Widget "_i
-		DO widgetAry.%Push(widgetObj)
-	}
+	&SQL(DECLARE WidgetCurs CURSOR FOR 
+    					    	   SELECT 
+								   %Id
+								   INTO :Id
+								   FROM SQLUser.Widget			
+ 					)	 
+			
+    		
+    &SQL(OPEN WidgetCurs)
+    
+    For { &SQL(FETCH WidgetCurs)
+    	  Quit:SQLCODE
+    	  set widgetObj = ##class(User.Widget).%OpenId(Id)
+    	  do widgetAry.%Push(widgetObj.toJSON())
+	    }
+    &SQL(CLOSE WidgetCurs)
 	SET retObj.Widgets = widgetAry
 	//
+	
+	
 	WRITE retObj.%ToJSON()
 	QUIT $$$OK
 }

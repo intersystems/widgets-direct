@@ -8,33 +8,41 @@
 
 <body ng-controller="PageController">
 
-		<!-- Put your page code here -->
-		<md-toolbar class="md-accent">
+		<!-- This is our static ToolBar -->
+		<div>
+		<md-toolbar class="md-hue">
 		 <h2 class="md-toolbar-tools">
 		 	<span>{{message}}</span>
 		 </h2>
 		</md-toolbar>
-		
-		
-		<md-card ng-repeat="widget in widgets">
+		</div>
+		<div layout="column">
+		<!-- Page content starts here -->
+		<div layout="row">
+		<md-input-container style="margin:5px;" flex=85>
+                <label>Filter</label>
+                <input type="text" ng-model="widgetFilterText">
+        </md-input-container>
+        <md-button class="md-raised md-primary" ng-click="sortAsc=!sortAsc" flex>Reorder</md-button>
+        </div>
+        <!-- List of Widgets starts here -->    
+		<md-card ng-repeat="widget in widgets | filter : widgetFilterText |  orderBy: !sortAsc ? 'Id' : '-Id'">
          <md-card-header>
           <md-card-avatar>
-            <img src="img/logo.svg"/>
+           <img src="img/logo.svg"/>
           </md-card-avatar>
           <md-card-header-text>
-            <span class="md-title">Widgets Direct</span>
-            <span class="md-subhead">{{widget.Id}} - {{widget.Name}}</span>
+            <span class="md-title">Widgets Direct - {{widget.Id}}</span>
+            <span class="md-subhead">{{widget.Name}} - ${{widget.Price}}</span>
           </md-card-header-text>
-        </md-card-header>
-        <!--<img ng-src="{{imagePath}}" class="md-card-image" alt="Washed Out">-->
-        
-        <md-card-content>
+         </md-card-header>
+         <md-card-content>
           <p>
-            This should be a description of {{widget.Name}}
+            {{widget.Description}}
           </p>
-        </md-card-content>
-      </md-card>
-		
+         </md-card-content>
+       </md-card>
+      </div>
 		<hr>
 <!-- AngularJS Libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
