@@ -35,6 +35,23 @@ ClassMethod GetAllWidgets() As %Status
     	  do widgetAry.%Push(widgetObj.toJSON(1))
 	    }
     &SQL(CLOSE WidgetCurs)
+	
+	// let's get the WWWidgets	
+	&SQL(DECLARE WWWidgetCurs CURSOR FOR 
+    					    	   SELECT 
+								   %Id
+								   INTO :Id
+								   FROM SQLUser.WWWidget	
+				)	 
+			
+    &SQL(OPEN WWWidgetCurs)
+    
+    For { &SQL(FETCH WWWidgetCurs)
+    	  Quit:SQLCODE
+    	  set widgetObj = ##class(User.WWWidget).%OpenId(Id)
+    	  do widgetAry.%Push(widgetObj.toJSON(1))
+	    }
+    &SQL(CLOSE WWWidgetCurs)
 	SET retObj.Widgets = widgetAry
 	
 	WRITE retObj.%ToJSON()
@@ -94,7 +111,12 @@ ClassMethod UpdateWidgetById(widgetid As %Integer) As %Status
 	SET retObj = {}
 	
 	Kill %objlasterror
+	if ($e(widgetid)="W"){
+		set widgetObj = ##class(User.WWWidget).%OpenId($e(widgetid,2,*))
+		}
+	else{
     set widgetObj = ##class(User.Widget).%OpenId(widgetid)
+	}
     If '$IsObject(widgetObj) {
     	// Object with this ID does not exist
         If $Data(%objlasterror) { Set tSC=%objlasterror }

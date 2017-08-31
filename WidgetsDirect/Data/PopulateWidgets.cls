@@ -122,4 +122,38 @@ ClassMethod PopulateLinks()
 	w link.%Save()
 }
 
+ClassMethod CreateWWWidgets() As %Status
+{
+	
+	
+	set widgetObj 				= ##class(User.WWWidget).%New()
+	set widgetObj.WidgetName 			= "Widget of Power" 
+	set widgetObj.Summary 	= "This widget provides 110V60 or 230V50" 
+	set widgetObj.Cost			= 40.99
+	set widgetObj.StockLevel		= 40
+	set widgetObj.Barcode  = "50011001104"
+	set widgetObj.Location = "HQ"
+	do widgetObj.%Save()
+	
+	set widgetObj 				= ##class(User.WWWidget).%New()
+	set widgetObj.WidgetName 			= "Widget of Speed" 
+	set widgetObj.Summary 	= "This widget can travel at 143mph" 
+	set widgetObj.Cost			= 140.99
+	set widgetObj.StockLevel		= 87
+	set widgetObj.Barcode  = "50011001105"
+	set widgetObj.Location = "HQ"
+	do widgetObj.%Save()
+	
+	set widgetObj 				= ##class(User.WWWidget).%New()
+	set widgetObj.WidgetName 			= "Widget of Light" 
+	set widgetObj.Summary 	= "This widget can provide 10000 Candlepower" 
+	set widgetObj.Cost			= 50.99
+	set widgetObj.StockLevel		= 54
+	set widgetObj.Barcode  = "50011001106"
+	set widgetObj.Location = "HQ"
+	do widgetObj.%Save()
+	
+	QUIT $$$OK
+}
+
 }
