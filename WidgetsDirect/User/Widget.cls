@@ -10,6 +10,8 @@ Property Price As %Currency;
 
 Property Quantity As %Integer;
 
+Relationship Accessories As User.WidgetAccessoryLink [ Cardinality = many, Inverse = Widget ];
+
 Method toJSON() As %String
 {
 	
@@ -19,6 +21,15 @@ Method toJSON() As %String
 	set jsonReturn.Description 		= ..Description
 	set jsonReturn.Price			= ..Price
 	set jsonReturn.Quantity 		= ..Quantity
+	
+	set accessorykey = ""
+    set accessoryList = []
+      Do {
+          set accLink = ..Accessories.GetNext(.accessorykey)
+          If (accLink '= "") { do accessoryList.%Push(accLink.Accessory.toJSON()) }
+      } While (accessorykey '= "")
+      set jsonReturn.Accessories = accessoryList
+	
 	quit jsonReturn
 }
 

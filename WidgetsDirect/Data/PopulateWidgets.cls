@@ -50,4 +50,76 @@ ClassMethod CreateWidgets() As %Status
 	QUIT $$$OK
 }
 
+ClassMethod PopulateAccessories()
+{
+
+	s acc = ##class(User.WidgetAccessory).%New()
+	s acc.Name = "Flotation Aid" 
+	s acc.Description = "This accessory helps the widget to float"
+	s acc.Price = 18.54
+	s acc.Quantity = 10
+	s acc.FirstManufactured = $H-1235 
+	s acc.InProduction =1
+	s acc.Import =1
+	s acc.SKU ="AE235B6FB"
+	w acc.%Save()
+
+	s acc = ##class(User.WidgetAccessory).%New()
+	s acc.Name = "Flight Aid" 
+	s acc.Description = "This accessory helps the widget to fly"
+	s acc.Price = 180.54
+	s acc.Quantity = 87
+	s acc.FirstManufactured = $H-300 
+	s acc.InProduction =1
+	s acc.Import =1
+	s acc.SKU ="AE2388DBB"
+	w acc.%Save()
+
+	s acc = ##class(User.WidgetAccessory).%New()
+	s acc.Name = "Slip Cover" 
+	s acc.Description = "This accessory protects the widget from scratches"
+	s acc.Price = 7.24
+	s acc.Quantity = 100
+	s acc.FirstManufactured = $H-10 
+	s acc.InProduction =1
+	s acc.Import =1
+	s acc.SKU ="AE2377800"
+	w acc.%Save()
+}
+
+ClassMethod PopulateLinks()
+{
+	
+	s link = ##class(User.WidgetAccessoryLink).%New()
+	d link.WidgetSetObjectId(1)
+	d link.AccessorySetObjectId(1) 	
+	w link.%Save()
+
+	s link = ##class(User.WidgetAccessoryLink).%New()
+	d link.WidgetSetObjectId(1)
+	d link.AccessorySetObjectId(2) 	
+	w link.%Save()
+
+	s link = ##class(User.WidgetAccessoryLink).%New()
+	d link.WidgetSetObjectId(1)
+	d link.AccessorySetObjectId(3) 	
+	w link.%Save()
+	
+	s link = ##class(User.WidgetAccessoryLink).%New()
+	d link.WidgetSetObjectId(2)
+	d link.AccessorySetObjectId(2) 	
+	w link.%Save()
+
+	
+	s link = ##class(User.WidgetAccessoryLink).%New()
+	d link.WidgetSetObjectId(3)
+	d link.AccessorySetObjectId(1) 	
+	w link.%Save()
+
+	s link = ##class(User.WidgetAccessoryLink).%New()
+	d link.WidgetSetObjectId(5)
+	d link.AccessorySetObjectId(3) 	
+	w link.%Save()
+}
+
 }
