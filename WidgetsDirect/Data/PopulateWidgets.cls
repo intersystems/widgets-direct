@@ -2,6 +2,17 @@
 Class Data.PopulateWidgets Extends %RegisteredObject
 {
 
+/// Run all population methods
+ClassMethod Populate() As %Status
+{
+	set sc=$$$OK
+	set sc=$$$ADDSC(sc,##class(Data.PopulateWidgets).CreateWidgets())
+	set sc=$$$ADDSC(sc,##class(Data.PopulateWidgets).PopulateAccessories())
+	set sc=$$$ADDSC(sc,##class(Data.PopulateWidgets).PopulateLinks())
+	set sc=$$$ADDSC(sc,##class(Data.PopulateWidgets).CreateWWWidgets())
+	quit sc
+}
+
 ClassMethod CreateWidgets() As %Status
 {
 	
@@ -85,6 +96,7 @@ ClassMethod PopulateAccessories()
 	s acc.Import =1
 	s acc.SKU ="AE2377800"
 	w acc.%Save()
+	QUIT $$$OK
 }
 
 ClassMethod PopulateLinks()
@@ -120,6 +132,7 @@ ClassMethod PopulateLinks()
 	d link.WidgetSetObjectId(5)
 	d link.AccessorySetObjectId(3) 	
 	w link.%Save()
+	QUIT $$$OK
 }
 
 ClassMethod CreateWWWidgets() As %Status
