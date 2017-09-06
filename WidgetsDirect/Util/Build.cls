@@ -28,7 +28,6 @@ XData BuildManifest
    AuthenticationMethods="64" />
  <CSPApplication name="${NAMESPACE}" Directory="${DBDIR}/csp" Url="/widgetsdirect/rest"
   Description="${NAMESPACE} REST application" 
-  DispatchClass="REST.Dispatch"
    AuthenticationMethods="64" />
 </Configuration>
 
