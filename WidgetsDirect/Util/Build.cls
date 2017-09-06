@@ -24,12 +24,10 @@ XData BuildManifest
  <CSPApplication name="${NAMESPACE}" Directory="${DBDIR}/csp" Url="/widgetsdirect"
   Description="${NAMESPACE} application" 
   Recurse="true" 
-  MatchRoles=":%DB_%DEFAULT"
   ServeFiles="true"
    AuthenticationMethods="64" />
  <CSPApplication name="${NAMESPACE}" Directory="${DBDIR}/csp" Url="/widgetsdirect/rest"
   Description="${NAMESPACE} REST application" 
-  MatchRoles=":%DB_%DEFAULT"
   DispatchClass="REST.Dispatch"
    AuthenticationMethods="64" />
 </Configuration>
