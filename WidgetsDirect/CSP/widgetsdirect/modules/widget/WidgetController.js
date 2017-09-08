@@ -16,7 +16,7 @@ angular
             controller: function DialogController($scope, $mdDialog, $http, $log) {
 
                 $scope.saveWidget = function(widget) {
-                  $http.put('/widgetsdirect/rest/widget/'+widget.Id, widget).then(
+                  $http.put('/widgetsdirect/rest/'+widget.Id, widget).then(
                      function(data) {
                        
                         $mdDialog.hide();

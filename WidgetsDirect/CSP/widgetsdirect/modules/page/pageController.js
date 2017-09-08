@@ -7,7 +7,7 @@ angular
 	
 	
 	
-	$http.get('/widgetsdirect/rest/Chris').then(
+	$http.get('/widgetsdirect/rest/Global Summit 2017').then(
 	  function(response) { //success
 	    $scope.message = response.data.Message;
 	    
@@ -17,7 +17,7 @@ angular
        }
       );
       
-      $http.get('/widgetsdirect/rest/widget/').then(
+      $http.get('/widgetsdirect/rest/').then(
 	  function(response) { //success
 	   
 	    $scope.widgets = response.data.Widgets;
