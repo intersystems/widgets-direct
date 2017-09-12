@@ -10,7 +10,7 @@ XData UrlMap [ XMLNamespace = "http://www.widgetsdirect.com/urlmap" ]
 		<Route Url="/:widgetid" Method="GET" 	Call="GetWidgetById" 	Cors="false" />
 		<Route Url="/:widgetid" Method="PUT" 	Call="UpdateWidgetById" Cors="false" />
 		<Route Url="/:widgetid"	Method="DELETE" Call="DeleteWidgetById" Cors="false" />		
-		</Routes>
+</Routes>
 }
 
 ClassMethod GetAllWidgets() As %Status
