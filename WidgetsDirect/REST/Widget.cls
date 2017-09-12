@@ -1,4 +1,4 @@
-/// REST Endpoint for Widgets
+/// REST Endpoint for Widgets test
 Class REST.Widget Extends %CSP.REST
 {
 
