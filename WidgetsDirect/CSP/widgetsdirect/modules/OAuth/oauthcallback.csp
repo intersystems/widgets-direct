@@ -1,6 +1,11 @@
 <html>
     <head>
         <script>
+        	//Update the first part of this to your server:port
+        	//make sure to have set the redirect URL for your client config to this on the OAuth authorization server
+        	var redirectURL = "http://localhost:57776" + "/widgetsdirect/Welcome.csp#/secure"
+        
+        	//this code is parsing the url params to pull out the access token, username and expiration and putting them in local storage
             var callbackResponse = (document.URL).split("#")[1];
             var responseParameters = (callbackResponse).split("&");
             var parameterMap = [];
@@ -16,7 +21,8 @@
                     }
                 };
                 window.localStorage.setItem("sso", JSON.stringify(sso));
-                window.location.href = "http://localhost:57776/widgetsdirect/Welcome.csp#/secure";
+                window.location.href = redirectURL;
+                
             } else {
                 alert("Problem authenticating");
             }
