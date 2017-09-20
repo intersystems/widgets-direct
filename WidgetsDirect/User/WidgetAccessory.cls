@@ -20,7 +20,7 @@ Property SKU As %String;
 
 Relationship Widgets As User.WidgetAccessoryLink [ Cardinality = many, Inverse = Accessory ];
 
-Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
+Method toDynamicObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
 {
 	
 	set jsonReturn = {}
@@ -40,7 +40,7 @@ Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicOb
 		do {
 			set widgetLink = ..Widgets.GetNext(.widgetKey)
 			if $isobject(widgetLink) && $isobject(widgetLink.Widget) {
-				do widgetList.%Push(widgetLink.Widget.toJSONObject())
+				do widgetList.%Push(widgetLink.Widget.toDynamicObject())
 			}
 		} while (widgetKey '= "")
 		set jsonReturn.Widgets = widgetList

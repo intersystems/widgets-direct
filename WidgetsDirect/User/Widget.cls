@@ -14,7 +14,7 @@ Property Deleted as %Boolean;
 
 Relationship Accessories As User.WidgetAccessoryLink [ Cardinality = many, Inverse = Widget ];
 
-Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
+Method toDynamicObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
 {
 	
 	set jsonReturn = {}
@@ -30,7 +30,7 @@ Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicOb
 		do {
 			set accLink = ..Accessories.GetNext(.accessoryKey)
 			if $isobject(accLink) && $isobject(accLink.Accessory) {
-				do accessoryList.%Push(accLink.Accessory.toJSONObject())
+				do accessoryList.%Push(accLink.Accessory.toDynamicObject())
 			}
 		} while (accessoryKey '= "")
 		set jsonReturn.Accessories = accessoryList

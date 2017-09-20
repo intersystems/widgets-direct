@@ -14,7 +14,7 @@ Property Barcode As %String;
 
 Property Location As %String;
 
-Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
+Method toDynamicObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
 {
 	
 	set jsonReturn				= {}

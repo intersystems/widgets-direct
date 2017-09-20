@@ -67,7 +67,7 @@ ClassMethod GetAllWidgets() As %Status
 		if $$$ISERR(tSC) {
 			quit
 		}
-		do widgetAry.%Push(widgetObj.toJSONObject(1))
+		do widgetAry.%Push(widgetObj.toDynamicObject(1))
 	}
 	if (SQLCODE && (SQLCODE '= 100)) {
 		set tSC = $$$ERROR($$$SQLCode,SQLCODE,%msg)
@@ -95,7 +95,7 @@ ClassMethod GetAllWidgets() As %Status
 		if $$$ISERR(tSC) {
 			quit
 		}
-		do widgetAry.%Push(widgetObj.toJSONObject(1))
+		do widgetAry.%Push(widgetObj.toDynamicObject(1))
 	}
 	if (SQLCODE && (SQLCODE '= 100)) {
 		set tSC = $$$ERROR($$$SQLCode,SQLCODE,%msg)
@@ -129,7 +129,7 @@ ClassMethod GetWidgetById(WidgetId As %Integer) As %Status
 			quit tSC
 		}
 		// Set output to JSON representation of object		  
-		set retObj.Widget = widgetObj.toJSONObject(1)
+		set retObj.Widget = widgetObj.toDynamicObject(1)
 	}
 	
 	write retObj.%ToJSON()
@@ -149,7 +149,7 @@ ClassMethod AddNewWidget() As %Status
 		quit tSC
 	}
 	
-	write widgetObj.toJSONObject().%ToJSON()
+	write widgetObj.toDynamicObject().%ToJSON()
 	
 	quit tSC
 }
@@ -183,7 +183,7 @@ ClassMethod UpdateWidgetById(WidgetId As %String) As %Status
 			quit tSC
 		}
 		
-		set retObj = widgetObj.toJSONObject()
+		set retObj = widgetObj.toDynamicObject()
 	}
 	
 	write retObj.%ToJSON()
@@ -213,7 +213,7 @@ ClassMethod DeleteWidgetById(WidgetId As %Integer) As %Status
 			quit tSC
 		}
 		
-		set retObj = widgetObj.toJSONObject()
+		set retObj = widgetObj.toDynamicObject()
 	}
 	
 	write retObj.%ToJSON()
