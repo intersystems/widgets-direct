@@ -17,14 +17,14 @@ Property Location As %String;
 Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
 {
 	
-	set jsonReturn = {}
-	set jsonReturn.Id 				= "W"_..%Id()
-	set jsonReturn.Name 			= ..WidgetName
-	set jsonReturn.Description 		= ..Summary
-	set jsonReturn.Price			= ..Cost
-	set jsonReturn.Quantity 		= ..StockLevel
-	set jsonReturn.Barcode 			= ..Barcode
-	set jsonReturn.Location			= ..Location
+	set jsonReturn				= {}
+	set jsonReturn.Id			= "W"_..%Id()
+	set jsonReturn.Name			= ..WidgetName
+	set jsonReturn.Description	= ..Summary
+	set jsonReturn.Price		= ..Cost
+	set jsonReturn.Quantity		= ..StockLevel
+	set jsonReturn.Barcode		= ..Barcode
+	set jsonReturn.Location		= ..Location
 	
 	quit jsonReturn
 }
@@ -33,22 +33,22 @@ Method fromJSON(json As %String) As %Status
 {
 	
 	set jsonObj = ##class(%Library.DynamicObject).%FromJSON(json)
-	 
-    set propsIterator = jsonObj.%GetIterator()
-    while (propsIterator.%GetNext(.key,.value)) {
-		if (key="Name"){
-			set ..WidgetName=value
-		} elseif (key="Description"){
-			set ..Summary=value
-		} elseif (key="Price"){
-			set ..Cost=value
-		} elseif (key="Quantity"){
-			set ..StockLevel=value
-		} elseif ((key="Barcode")||(key="Location")){
+	
+	set propsIterator = jsonObj.%GetIterator()
+	while (propsIterator.%GetNext(.key,.value)) {
+		if (key = "Name") {
+			set ..WidgetName = value
+		} elseif (key = "Description") {
+			set ..Summary = value
+		} elseif (key = "Price") {
+			set ..Cost = value
+		} elseif (key = "Quantity") {
+			set ..StockLevel = value
+		} elseif ((key = "Barcode") || (key = "Location")) {
 			set $PROPERTY($this, key) = value
 		}
 	}
-         
+	
 	quit ..%Save()
 }
 

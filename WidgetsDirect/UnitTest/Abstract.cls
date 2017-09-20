@@ -10,11 +10,11 @@ Class UnitTest.Abstract Extends (%UnitTest.TestCase, %CSP.Page)
 Parameter TITLE As %String;
 
 /// default maximum global accesses for a single row based method call
-/// can overide per class or put explicitly in each method call
+/// can override per class or put explicitly in each method call
 Parameter GlobalsMaxMethod = 100;
 
 /// default maximum global accesses for a query
-/// can overide per class or put explicitly in each method call
+/// can override per class or put explicitly in each method call
 Parameter GlobalsMaxQuery = 1000;
 
 /// Use evaluation methods to test performance 
