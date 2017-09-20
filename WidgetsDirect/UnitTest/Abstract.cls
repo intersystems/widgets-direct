@@ -8,49 +8,49 @@ Class UnitTest.Abstract Extends (%UnitTest.TestCase, %CSP.Page)
 
 /// Your test title
 Parameter TITLE As %String;
+
 /// default maximum global accesses for a single row based method call
-/// can overide per class or pur explicitly in each method call
-
+/// can overide per class or put explicitly in each method call
 Parameter GlobalsMaxMethod = 100;
+
 /// default maximum global accesses for a query
-/// can overide per class or pur explicitly in each method call
-
+/// can overide per class or put explicitly in each method call
 Parameter GlobalsMaxQuery = 1000;
+
 /// Use evaluation methods to test performance 
-
 Property PerformanceTest As %Boolean [ InitialExpression = {..UsePerformanceTest()} ];
-/// This method is used to display a test page.
 
+/// This method is used to display a test page.
 ClassMethod OnPage() As %Status [ ServerOnly = 1 ]
 {
 	lock
-	do ##class(UnitTest.Formatter).Run(..%ClassName(1))
+	do ##class(UnitTest.Formatter).Run($classname($this))
 	quit $$$OK
 }
-/// Run this specific test (in debug mode)
 
+/// Run this specific test (in debug mode)
 ClassMethod Run(qualifiers As %String = "") As %Status [ ProcedureBlock = 1 ]
 {
-	set sc=##class(UnitTest.Manager).RunTest(..%ClassName(1),"/recursive=0"_qualifiers)
+	set sc=##class(UnitTest.Manager).RunTest($classname($this),"/recursive=0"_qualifiers)
 	quit sc
 }
-/// Run this test and all its children
 
+/// Run this test and all its children
 ClassMethod RunRecursive(qualifiers As %String = "") As %Status [ ProcedureBlock = 1 ]
 {
-	set sc=##class(UnitTest.Manager).RunTest(..%ClassName(1),"/recursive=1"_qualifiers)
+	set sc=##class(UnitTest.Manager).RunTest($classname($this),"/recursive=1"_qualifiers)
 	quit sc
 }
-/// Execute expression using current object's context
 
+/// Execute expression using current object's context
 Method Execute(expr) As %String
 {
 	new %result
 	xecute "s %result="_expr
 	quit %result
 }
-/// Log execution HTML result. Now it is stored as a log message.
 
+/// Log execution HTML result. Now it is stored as a log message.
 Method LogResult(result)
 {
 	set oldDisplay=..Manager.Display
@@ -59,13 +59,13 @@ Method LogResult(result)
 	set ..Manager.Display=oldDisplay
 	quit
 }
+
 /// Get last test result instance id, dateTime, status, duration and HTML
 /// All this information is stored in ^UnitTest.Result
-
 ClassMethod GetLastResult(ByRef dateTime, ByRef status, ByRef duration, ByRef html, ByRef suite) As %String [ ProcedureBlock = 1 ]
 {
 	set (dateTime,status,duration,html,suite)=""
-	set name=..%ClassName(1)
+	set name=$classname($this)
 	&SQL(SELECT Duration, TestSuite->TestInstance, TestSuite->Name, TestSuite->TestInstance->DateTime
 		INTO :qDuration, :qInstance, :qSuite, :qDateTime
 		FROM %IGNOREINDICES %UnitTest_Result.TestCase.idxName %UnitTest_Result.TestCase

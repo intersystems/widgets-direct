@@ -14,7 +14,7 @@ Property Deleted as %Boolean;
 
 Relationship Accessories As User.WidgetAccessoryLink [ Cardinality = many, Inverse = Widget ];
 
-Method toJSON(traverseRelationships As %Boolean = 0) As %String
+Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
 {
 	
 	set jsonReturn = {}
@@ -24,32 +24,33 @@ Method toJSON(traverseRelationships As %Boolean = 0) As %String
 	set jsonReturn.Price			= ..Price
 	set jsonReturn.Quantity 		= ..Quantity
 	
-	
 	if traverseRelationships {
-	set accessorykey = ""
-    set accessoryList = []
-      Do {
-          set accLink = ..Accessories.GetNext(.accessorykey)
-          If (accLink '= "") { do accessoryList.%Push(accLink.Accessory.toJSON()) }
-      } While (accessorykey '= "")
-      set jsonReturn.Accessories = accessoryList
+		set accessoryKey = ""
+		set accessoryList = []
+		do {
+			set accLink = ..Accessories.GetNext(.accessoryKey)
+			if $isobject(accLink) && $isobject(accLink.Accessory) {
+				do accessoryList.%Push(accLink.Accessory.toJSONObject())
+			}
+		} while (accessoryKey '= "")
+		set jsonReturn.Accessories = accessoryList
 	}
 	
 	quit jsonReturn
 }
 
-Method fromJSON(json As %String) As %String
+Method fromJSON(json As %String) As %Status
 {
 	
-	set jsonObj = {}.%FromJSON(json)
-	 
-    set propsIterator = jsonObj.%GetIterator()
-    While (propsIterator.%GetNext(.key,.value)) {
-          if ((key="Name")||(key="Description")||(key="Price")||(key="Quantity")){
-	             Set $PROPERTY($this, key) = value
-	          }
-         }
-         
+	set jsonObj = ##class(%Library.DynamicObject).%FromJSON(json)
+	
+	set propsIterator = jsonObj.%GetIterator()
+	while (propsIterator.%GetNext(.key,.value)) {
+		if ((key="Name")||(key="Description")||(key="Price")||(key="Quantity")) {
+			set $PROPERTY($this, key) = value
+		}
+	}
+	
 	quit ..%Save()
 }
 

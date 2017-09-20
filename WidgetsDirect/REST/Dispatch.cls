@@ -4,184 +4,221 @@ Class REST.Dispatch Extends %CSP.REST
 
 XData UrlMap [ XMLNamespace = "http://www.widgetsdirect.com/urlmap" ]
 {
-
 <Routes>
 <!--<Map Prefix  ="/widget"  Forward="REST.Widget" />-->
-<Route Url="/version" 			Method="GET" 	Call="version" 			Cors="false" />
-<Route Url="/:name" 					Method="GET" 	Call="HelloWorld" 			Cors="false" />
+<Route Url="/version" 	Method="GET" 	Call="version" 			Cors="false" />
+<Route Url="/:name" 	Method="GET" 	Call="HelloWorld" 		Cors="false" />
 <Route Url="/" 			Method="GET" 	Call="GetAllWidgets" 	Cors="false" />
 <Route Url="/" 			Method="POST" 	Call="AddNewWidget" 	Cors="false" />	
-<Route Url="/:widgetid" 	Method="GET" 	Call="GetWidgetById" 	Cors="false" />
-<Route Url="/:widgetid" 	Method="PUT" 	Call="UpdateWidgetById" Cors="false" />
-<Route Url="/:widgetid"	Method="DELETE" Call="DeleteWidgetById" Cors="false" />	</Routes>
+<Route Url="/:widgetid" Method="GET" 	Call="GetWidgetById" 	Cors="false" />
+<Route Url="/:widgetid" Method="PUT" 	Call="UpdateWidgetById" Cors="false" />
+<Route Url="/:widgetid"	Method="DELETE" Call="DeleteWidgetById" Cors="false" />
+</Routes>
 }
 
 ClassMethod HelloWorld(Name As %String = "") As %Status
 {
-	Set %response.ContentType="application/json"
+	set %response.ContentType = "application/json"
 	
-	SET retObj = {}
-	SET retMessage = "Welcome to Widgets Direct "_Name
-	SET retObj.Message = retMessage
+	set retObj = {}
+	set retMessage = "Welcome to Widgets Direct "_Name
+	set retObj.Message = retMessage
 
+	write retObj.%ToJSON()
 	
-	WRITE retObj.%ToJSON()
-	QUIT $$$OK
+	quit $$$OK
 }
 
 ClassMethod version() As %Status
 {
-	Set %response.ContentType="application/json"
+	set %response.ContentType = "application/json"
 	
-	SET retObj = {}
-	SET retMessage = $zv_":"_$zdt($h,3)_##class(%PopulateUtils).City()
-	SET retObj.Message = retMessage
+	set retObj = {}
+	set retMessage = $zversion_":"_$zdatetime($horolog,3)_##class(%PopulateUtils).City()
+	set retObj.Message = retMessage
 
-	
-	WRITE retObj.%ToJSON()
-	QUIT $$$OK
+	write retObj.%ToJSON()
+
+	quit $$$OK
 }
 
 ClassMethod GetAllWidgets() As %Status
 {
-	Set %response.ContentType="application/json"
+	set %response.ContentType = "application/json"
 	
-	SET retObj = {}
-	SET widgetAry = []
-	&SQL(DECLARE WidgetCurs CURSOR FOR 
-    					    	   SELECT 
-								   %Id
-								   INTO :Id
-								   FROM SQLUser.Widget	
-								   where Deleted <> 1 or Deleted is null		
- 					)	 
+	set retObj = {}
+	set tSC = $$$OK
+	set widgetAry = []
+
+	&SQL(DECLARE WidgetCursor CURSOR FOR 
+								SELECT 
+								%Id
+								INTO :WidgetId
+								FROM SQLUser.Widget	
+								WHERE Deleted <> 1 OR Deleted is null		
+ 	)	 
 			
-    &SQL(OPEN WidgetCurs)
-    
-    For { &SQL(FETCH WidgetCurs)
-    	  Quit:SQLCODE
-    	  set widgetObj = ##class(User.Widget).%OpenId(Id)
-    	  do widgetAry.%Push(widgetObj.toJSON(1))
-	    }
-    &SQL(CLOSE WidgetCurs)
+	&SQL(OPEN WidgetCursor)
+	
+	for {
+		&SQL(FETCH WidgetCursor)
+		quit:SQLCODE
+		set widgetObj = ##class(User.Widget).%OpenId(WidgetId,,.tSC)
+		if $$$ISERR(tSC) {
+			quit
+		}
+		do widgetAry.%Push(widgetObj.toJSONObject(1))
+	}
+	if (SQLCODE && (SQLCODE '= 100)) {
+		set tSC = $$$ERROR($$$SQLCode,SQLCODE,%msg)
+		// delay quit until after we close the cursor
+	}
+	&SQL(CLOSE WidgetCursor)
+	if $$$ISERR(tSC) {
+		quit tSC
+	}
 	
 	// let's get the WWWidgets	
-	&SQL(DECLARE WWWidgetCurs CURSOR FOR 
-    					    	   SELECT 
-								   %Id
-								   INTO :Id
-								   FROM SQLUser.WWWidget	
-				)	 
-			
-    &SQL(OPEN WWWidgetCurs)
-    
-    For { &SQL(FETCH WWWidgetCurs)
-    	  Quit:SQLCODE
-    	  set widgetObj = ##class(User.WWWidget).%OpenId(Id)
-    	  do widgetAry.%Push(widgetObj.toJSON(1))
-	    }
-    &SQL(CLOSE WWWidgetCurs)
-	SET retObj.Widgets = widgetAry
+	&SQL(DECLARE WWWidgetCursor CURSOR FOR 
+								SELECT 
+								%Id
+								INTO :WWWidgetId
+								FROM SQLUser.WWWidget	
+	)	 
 	
-	WRITE retObj.%ToJSON()
-	QUIT $$$OK
+	&SQL(OPEN WWWidgetCursor)
+	
+	for {
+		&SQL(FETCH WWWidgetCursor)
+		quit:SQLCODE
+		set widgetObj = ##class(User.WWWidget).%OpenId(WWWidgetId,,.tSC)
+		if $$$ISERR(tSC) {
+			quit
+		}
+		do widgetAry.%Push(widgetObj.toJSONObject(1))
+	}
+	if (SQLCODE && (SQLCODE '= 100)) {
+		set tSC = $$$ERROR($$$SQLCode,SQLCODE,%msg)
+		// delay quit until after we close the cursor
+	}
+	&SQL(CLOSE WWWidgetCursor)
+	if $$$ISERR(tSC) {
+		quit tSC
+	}
+	
+	set retObj.Widgets = widgetAry
+	
+	write retObj.%ToJSON()
+	
+	quit $$$OK
 }
 
 ClassMethod GetWidgetById(WidgetId As %Integer) As %Status
 {
-	Set %response.ContentType="application/json"
+	set %response.ContentType = "application/json"
 	
 	set tSC = $$$OK
-	SET retObj = {}
-	SET widgetAry = []
+	set retObj = {}
 	
-    // Safely retrieve object 
-    Kill %objlasterror
-        set widgetObj = ##class(User.Widget).%OpenId(WidgetId)
-        If '$IsObject(widgetObj) {
-            // Object with this ID does not exist
-            If $Data(%objlasterror) { Set tSC=%objlasterror }
-        }
-        If $$$ISERR(tSC) { Quit tSC }
-    // Set output to JSON representation of object    	  
-	SET retObj.Widget = widgetObj.toJSON(1)
+	if '##class(User.Widget).%ExistsId(WidgetId) {
+		set %response.Status = ..#HTTP404NOTFOUND
+	}
+	else {
+		set widgetObj = ##class(User.Widget).%OpenId(WidgetId,,.tSC)
+		if $$$ISERR(tSC) {
+			quit tSC
+		}
+		// Set output to JSON representation of object		  
+		set retObj.Widget = widgetObj.toJSONObject(1)
+	}
 	
-	WRITE retObj.%ToJSON()
-	QUIT tSC
+	write retObj.%ToJSON()
+	
+	quit tSC
 }
 
 ClassMethod AddNewWidget() As %Status
 {
-	Set %response.ContentType="application/json"
+	set %response.ContentType = "application/json"
 	
-	SET retObj = {}
+	set widgetObj = ##class(User.Widget).%New()
+	set updateJSON = %request.Content.Read($$$MaxLocalLength)
 	
-	Kill %objlasterror
-    set widgetObj = ##class(User.Widget).%New()
-    If '$IsObject(widgetObj) {
-    	// Object with this ID does not exist
-        If $Data(%objlasterror) { Set tSC=%objlasterror }
-        }
-    Set updateJSON = %request.Content.Read()
-    
-    Set tSC = widgetObj.fromJSON(updateJSON)
-   
-        
-    If $$$ISERR(tSC) { Quit tSC }
-	
-	WRITE widgetObj.toJSON().%ToJSON()
-	QUIT $$$OK
-}
-
-ClassMethod UpdateWidgetById(widgetid As %Integer) As %Status
-{
-	Set %response.ContentType="application/json"
-	
-	SET retObj = {}
-	
-	Kill %objlasterror
-	if ($e(widgetid)="W"){
-		set widgetObj = ##class(User.WWWidget).%OpenId($e(widgetid,2,*))
-		}
-	else{
-    set widgetObj = ##class(User.Widget).%OpenId(widgetid)
+	set tSC = widgetObj.fromJSON(updateJSON)
+	if $$$ISERR(tSC) {
+		quit tSC
 	}
-    If '$IsObject(widgetObj) {
-    	// Object with this ID does not exist
-        If $Data(%objlasterror) { Set tSC=%objlasterror }
-        }
-    Set updateJSON = %request.Content.Read()
-    
-    Set tSC = widgetObj.fromJSON(updateJSON)
-   
-        
-    If $$$ISERR(tSC) { Quit tSC }
 	
-	WRITE widgetObj.toJSON().%ToJSON()
-	QUIT $$$OK
+	write widgetObj.toJSONObject().%ToJSON()
+	
+	quit tSC
 }
 
-ClassMethod DeleteWidgetById(widgetid As %Integer) As %Status
+ClassMethod UpdateWidgetById(WidgetId As %String) As %Status
 {
-	Set %response.ContentType="application/json"
+	set %response.ContentType = "application/json"
 	
-	SET retObj = {}
+	set retObj = {}
 	
-	Kill %objlasterror
-    set widgetObj = ##class(User.Widget).%OpenId(widgetid)
-    If '$IsObject(widgetObj) {
-    	// Object with this ID does not exist
-        If $Data(%objlasterror) { Set tSC=%objlasterror }
-        }
-   
-    
-    set widgetObj.Deleted=1
-   	set tSC = widgetObj.%Save()
-        
-    If $$$ISERR(tSC) { Quit tSC }
+	set widgetClass = "User.Widget"
+	set internalWidgetId = WidgetId
+	if ($extract(WidgetId,1) = "W") {
+		set widgetClass = "User.WWWidget"
+		set internalWidgetId = $extract(WidgetId,2,*)
+	}
 	
-	WRITE widgetObj.toJSON().%ToJSON()
-	QUIT $$$OK
+	if '$classmethod(widgetClass,"%ExistsId",internalWidgetId) {
+		set %response.Status = ..#HTTP404NOTFOUND
+	}
+	else {
+		set widgetObj = $classmethod(widgetClass,"%OpenId",internalWidgetId,,.tSC)
+		if $$$ISERR(tSC) {
+			quit tSC
+		}
+		
+		set updateJSON = %request.Content.Read($$$MaxLocalLength)
+	
+		set tSC = widgetObj.fromJSON(updateJSON)
+		if $$$ISERR(tSC) {
+			quit tSC
+		}
+		
+		set retObj = widgetObj.toJSONObject()
+	}
+	
+	write retObj.%ToJSON()
+
+	quit $$$OK
+}
+
+ClassMethod DeleteWidgetById(WidgetId As %Integer) As %Status
+{
+	set %response.ContentType = "application/json"
+	
+	set retObj = {}
+	set tSC = $$$OK
+	
+	if '##class(User.Widget).%ExistsId(WidgetId) {
+		set %response.Status = ..#HTTP404NOTFOUND
+	}
+	else {
+		set widgetObj = ##class(User.Widget).%OpenId(WidgetId,,.tSC)
+		if $$$ISERR(tSC) {
+			quit tSC
+		}
+		
+		set widgetObj.Deleted = 1
+		set tSC = widgetObj.%Save()
+		if $$$ISERR(tSC) {
+			quit tSC
+		}
+		
+		set retObj = widgetObj.toJSONObject()
+	}
+	
+	write retObj.%ToJSON()
+	
+	quit tSC
 }
 
 }

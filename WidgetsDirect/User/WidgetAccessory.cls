@@ -20,7 +20,7 @@ Property SKU As %String;
 
 Relationship Widgets As User.WidgetAccessoryLink [ Cardinality = many, Inverse = Accessory ];
 
-Method toJSON(traverseRelationships As %Boolean = 0) As %String
+Method toJSONObject(traverseRelationships As %Boolean = 0) As %Library.DynamicObject
 {
 	
 	set jsonReturn = {}
@@ -29,19 +29,21 @@ Method toJSON(traverseRelationships As %Boolean = 0) As %String
 	set jsonReturn.Description 		 = ..Description
 	set jsonReturn.Price			 = ..Price
 	set jsonReturn.Quantity 		 = ..Quantity
-	set jsonReturn.FirstManufactured = $zd(..FirstManufactured,4)
+	set jsonReturn.FirstManufactured = $zdate(..FirstManufactured,4)
 	set jsonReturn.InProduction		 = ..InProduction
 	set jsonReturn.Import			 = ..Import
 	set jsonReturn.SKU				 = ..SKU
 	
 	if traverseRelationships {
-	set widgetkey = ""
-    set widgetList = []
-      Do {
-          set widgetLink = ..Widgets.GetNext(.widgetkey)
-          If (widgetLink '= "") { do widgetList.%Push(widgetLink.Widget.toJSON()) }
-      } While (widgetkey '= "")
-      set jsonReturn.Widgets = widgetList
+		set widgetKey = ""
+	    set widgetList = []
+		do {
+			set widgetLink = ..Widgets.GetNext(.widgetKey)
+			if $isobject(widgetLink) && $isobject(widgetLink.Widget) {
+				do widgetList.%Push(widgetLink.Widget.toJSONObject())
+			}
+		} while (widgetKey '= "")
+		set jsonReturn.Widgets = widgetList
 	}
 	
 	quit jsonReturn
