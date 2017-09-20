@@ -2,7 +2,7 @@
 Class REST.Dispatch Extends %CSP.REST
 {
 
-XData UrlMap [ XMLNamespace = "http://www.widgetsdirect.com/urlmap" ]
+XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 {
 <Routes>
 <!--<Map Prefix  ="/widget"  Forward="REST.Widget" />-->

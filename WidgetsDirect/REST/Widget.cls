@@ -2,7 +2,7 @@
 Class REST.Widget Extends %CSP.REST
 {
 
-XData UrlMap [ XMLNamespace = "http://www.widgetsdirect.com/urlmap" ]
+XData UrlMap [ XMLNamespace = "http://www.intersystems.com/urlmap" ]
 {
 <Routes>
 <Route Url="/" 			Method="GET" 	Call="GetAllWidgets" 	Cors="false" />
