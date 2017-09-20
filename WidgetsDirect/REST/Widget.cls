@@ -39,7 +39,7 @@ ClassMethod GetAllWidgets() As %Status
 		}
 		do widgetAry.%Push(widgetObj.toJSONObject(1))
 	}
-	if (SQLCODE && (SQLCODE '= 100)) {
+	if (SQLCODE < 0) {
 		set tSC = $$$ERROR($$$SQLCode,SQLCODE,%msg)
 		// delay quit until after we close the cursor
 	}
@@ -67,7 +67,7 @@ ClassMethod GetAllWidgets() As %Status
 		}
 		do widgetAry.%Push(widgetObj.toJSONObject(1))
 	}
-	if (SQLCODE && (SQLCODE '= 100)) {
+	if (SQLCODE < 0) {
 		set tSC = $$$ERROR($$$SQLCode,SQLCODE,%msg)
 		// delay quit until after we close the cursor
 	}
