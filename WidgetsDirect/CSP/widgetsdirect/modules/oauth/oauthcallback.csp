@@ -1,30 +1,29 @@
 <html>
     <head>
         <script>
-        	//Update the first part of this to your server:port
-        	//make sure to have set the redirect URL for your client config to this on the OAuth authorization server
-        	var redirectURL = "http://localhost:57776" + "/widgetsdirect/Welcome.csp#/secure"
-        
+        	
         	//this code is parsing the url params to pull out the access token, username and expiration and putting them in local storage
             var callbackResponse = (document.URL).split("#")[1];
             var responseParameters = (callbackResponse).split("&");
-            var parameterMap = [];
+            var parameterMap = {};
             for(var i = 0; i < responseParameters.length; i++) {
-                parameterMap[responseParameters[i].split("=")[0]] = responseParameters[i].split("=")[1];
+            	var param = responseParameters[i].split("=")[0];
+            	var val = decodeURIComponent(responseParameters[i].split("=")[1]);
+            	
+                parameterMap[param] = val;
             }
             if(parameterMap.access_token !== undefined && parameterMap.access_token !== null) {
-                var sso = {
-                    oauth: {
+                var oauth = {
                         access_token: parameterMap.access_token,
                         expires_in: parameterMap.expires_in,
                         account_username: parameterMap.account_username
-                    }
                 };
-                window.localStorage.setItem("sso", JSON.stringify(sso));
-                window.location.href = redirectURL;
+                
+                window.localStorage.setItem("oauth", JSON.stringify(oauth));
+                window.location.href = "/widgetsdirect/Welcome.csp#/secure";
                 
             } else {
-                alert("Problem authenticating");
+                alert("Problem authenticating. Check the URL error code or the console log for clues");
             }
         </script>
     </head>

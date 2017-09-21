@@ -32,7 +32,7 @@ angular.module('WidgetsDirect')
 	})
 	.controller("SecureController", function($scope) {
 	
-	    $scope.accessToken = JSON.parse(window.localStorage.getItem("sso")).oauth.access_token;
+	    $scope.accessToken = JSON.parse(window.localStorage.getItem("oauth")).access_token;
 	    $scope.hide = function() {
 	    	window.location.hash = "/default";
 	    }
