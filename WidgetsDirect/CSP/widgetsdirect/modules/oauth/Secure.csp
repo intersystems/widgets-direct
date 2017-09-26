@@ -1,0 +1,17 @@
+<md-card>
+	<md-card-header>
+		<span class="md-title">Successful OAuth Login!</span>
+	</md-card-header>
+	<md-card-content >
+        <md-input-container class="md-block">
+          <label>Access Token:</label>
+          <textarea ng-model="accessToken" rows="5" readonly md-select-on-focus></textarea>
+        </md-input-container>
+        <p>Include this token in calls to your api like so: 
+        </br>headers: { "Authorization": "Bearer " + access_token }
+        </br> then in the backend you need to add code to validate the token as part of the security on your REST calls.
+        </p>
+        <md-button class="md-raised md-primary" ng-click="hide()">Hide token</md-button>
+	</md-card-content >
+    
+</md-card>

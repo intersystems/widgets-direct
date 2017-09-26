@@ -1,3 +1,2 @@
 angular
-  .module('WidgetsDirect', ['ngMaterial'])
-	
+	.module('WidgetsDirect', ['ngMaterial','ui.router'])
