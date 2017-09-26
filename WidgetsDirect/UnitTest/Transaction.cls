@@ -6,32 +6,34 @@ Class UnitTest.Transaction Extends UnitTest.Abstract
 Method OnBeforeAllTests() As %Status
 {
 	tstart
-	if ..Manager.Debug set %debug=1
+	if ..Manager.Debug {
+		set %debug = 1
+	}
 	quit $$$OK
 }
 
 Method OnAfterAllTests() As %Status
 {
-	set Status=$$$OK
+	set status = $$$OK
 
 	trollback
 	
 	// Kill newly created ID counter globals
 	// ^||FactoryKill is populated by UnitTest.Factory
-	set i=""
+	set i = ""
 	for  {
-		set i=$order(^||FactoryKill(i))
+		set i = $order(^||FactoryKill(i))
 		quit:i=""
-		set %d(0)=$list(^||FactoryKill(i),2)
-		try{
+		set %d(0) = $list(^||FactoryKill(i),2)
+		try {
 			xecute "kill "_$list(^||FactoryKill(i),1)
 		} catch ex {
-			set Status = $$$ADDSC(Status, ex.AsStatus())
+			set status = $$$ADDSC(status, ex.AsStatus())
 		}
 	}
 	kill ^||FactoryKill
 	
-	quit Status
+	quit status
 }
 
 }
